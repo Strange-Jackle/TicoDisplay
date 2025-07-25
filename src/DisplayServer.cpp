@@ -10,10 +10,10 @@ void DisplayServer::begin() {
   pinMode(PIN_TFT_BL, OUTPUT);
   digitalWrite(PIN_TFT_BL, HIGH);
 
-  // UART2 ↔ ESP32 at 38400 baud
+  // UART2 ↔ ESP32 at 115200 baud
   Serial2.setTX(ESP32C3_TX_PIN);
   Serial2.setRX(ESP32C3_RX_PIN);
-  Serial2.begin(38400);
+  Serial2.begin(115200);
 
   // Initialize display
   tft.init();
@@ -24,8 +24,10 @@ void DisplayServer::begin() {
 void DisplayServer::handle() {
   if (Serial2.available()) {
     String cmd = Serial2.readStringUntil('\n');
-    cmd.trim();                        // trim() returns void :contentReference[oaicite:4]{index=4}
-    processCommand(cmd);
+    cmd.trim();
+    if (cmd.length() > 0) {
+      processCommand(cmd);
+    }
   }
 }
 
@@ -57,12 +59,12 @@ void DisplayServer::processCommand(const String& cmd) {
   // …add more commands here…
 }
 
-uint16_t DisplayServer::parseColor(const String& s) {
-  if (s == "BLACK") return TFT_BLACK;
-  if (s == "WHITE") return TFT_WHITE;
-  if (s == "RED")   return TFT_RED;
-  if (s.startsWith("0x"))
-    return (uint16_t)strtol(s.c_str(), nullptr, 16);
+uint16_t DisplayServer::parseColor(const char* s) {
+  if (strcmp(s, "BLACK") == 0) return TFT_BLACK;
+  if (strcmp(s, "WHITE") == 0) return TFT_WHITE;
+  if (strcmp(s, "RED") == 0)   return TFT_RED;
+  if (s[0] == '0' && s[1] == 'x')
+    return (uint16_t)strtol(s, nullptr, 16);
   return TFT_WHITE;
 }
 #endif  // ARDUINO_ARCH_RP2040

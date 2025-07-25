@@ -10,6 +10,6 @@ public:
   void handle();
 private:
   void processCommand(const String& cmd);
-  uint16_t parseColor(const String& s);
+  uint16_t parseColor(const char* s);
 };
 #endif  // ARDUINO_ARCH_RP2040
