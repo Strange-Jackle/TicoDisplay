@@ -21,6 +21,4 @@
 #define ESP32C3_RX_PIN 9
 #define ESP32C3_TX_PIN 8
 
-const char ssid[] = "Your ssid";
-const char pass[] = "password";
 
